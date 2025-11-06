@@ -6,7 +6,7 @@ param(
 
 $version = "v_1_0_0"
 $modpackName = ""
-$defaultPresetName = "Pain_${version}$(Get-Date -Format "yyyyMMdd_HHmmss")$(if ($modpackName) { '_${modpackName}' } else { '' })"
+$defaultPresetName = "Pain_${version}_$(Get-Date -Format "yyyyMMdd_HHmmss")$(if ($modpackName) { '_${modpackName}' } else { '' })"
 
 if ([string]::IsNullOrEmpty($ModsPath)) {
     $ModsPath = Read-Host "Enter the mods path (default: D:\SteamLibrary\steamapps\workshop\content\108600)"
@@ -145,7 +145,7 @@ try {
     Write-Host "`n`nDependencies resolved successfully!"
     
     $sortedMods = $sortedMods | Where-Object { $_ -ne $null -and $mods.ContainsKey($_) }
-    Write-Host "Stage 4/4: Creating output file..."
+    Write-Host "Stage 4/4: Adding mod preset output file..."
     
     $outputDir = Split-Path $outputPath -Parent
     if (!(Test-Path $outputDir)) { New-Item -ItemType Directory -Path $outputDir -Force }
@@ -153,7 +153,7 @@ try {
     $outputContent = "${PresetName}:" + ($sortedMods -join ";")
     $outputContent | Out-File -FilePath $outputPath -Append -Encoding UTF8
     
-    Write-Host "`nLoad order saved to: $outputPath"
+    Write-Host "`nMods preset saved: $PresetName"
     Write-Host "All done! $($mods.Count) mods processed successfully."
 }
 catch { Write-Error "Error resolving dependencies: $($_.Exception.Message)" }
