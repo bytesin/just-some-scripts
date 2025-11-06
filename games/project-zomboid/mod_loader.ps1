@@ -4,18 +4,18 @@ param(
     [string]$presetName
 )
 
-$version = "v_1_0_0"
-$modpackName = ""
-$defaultPresetName = "Pain_${version}_$(Get-Date -Format "yyyyMMdd_HHmmss")$(if ($modpackName) { '_${modpackName}' } else { '' })"
+$defaultModsPath = "$(Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\Valve\Steam" -Name "InstallPath")\steamapps\workshop\content\108600"
+$defaultZomboidDirectory = "$env:USERPROFILE\Zomboid\"
+$defaultPresetName = "Pain_$(Get-Date -Format "yyyyMMdd_HHmmss")"
 
 if ([string]::IsNullOrEmpty($ModsPath)) {
-    $ModsPath = Read-Host "Enter the mods path (default: D:\SteamLibrary\steamapps\workshop\content\108600)"
-    if ([string]::IsNullOrEmpty($ModsPath)) { $ModsPath = "D:\SteamLibrary\steamapps\workshop\content\108600" }
+    $ModsPath = Read-Host "Enter the mods path (default: $defaultModsPath)"
+    if ([string]::IsNullOrEmpty($ModsPath)) { $ModsPath = $defaultModsPath }
 }
 
 if ([string]::IsNullOrEmpty($UserZomboidDirectory)) {
-    $UserZomboidDirectory = Read-Host "Enter the Zomboid directory (default: $env:USERPROFILE\Zomboid\)"
-    if ([string]::IsNullOrEmpty($UserZomboidDirectory)) { $UserZomboidDirectory = "$env:USERPROFILE\Zomboid" }
+    $UserZomboidDirectory = Read-Host "Enter the Zomboid directory (default: $defaultZomboidDirectory)"
+    if ([string]::IsNullOrEmpty($UserZomboidDirectory)) { $UserZomboidDirectory = $defaultZomboidDirectory }
 }
 
 if ([string]::IsNullOrEmpty($PresetName)) {
@@ -149,6 +149,7 @@ try {
     
     $outputDir = Split-Path $outputPath -Parent
     if (!(Test-Path $outputDir)) { New-Item -ItemType Directory -Path $outputDir -Force }
+    if (!(Test-Path $outputPath)) { New-Item -ItemType File -Path $outputPath -Force | Out-Null }
     
     $outputContent = "${PresetName}:" + ($sortedMods -join ";")
     $outputContent | Out-File -FilePath $outputPath -Append -Encoding UTF8
