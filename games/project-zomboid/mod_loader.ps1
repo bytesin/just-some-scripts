@@ -8,7 +8,7 @@ $defaultModsPath = "$(Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\WOW6432Node\Va
 $defaultZomboidDirectory = "$env:USERPROFILE\Zomboid\"
 $defaultPresetName = "Pain_$(Get-Date -Format "yyyyMMdd_HHmmss")"
 
-if ([string]::IsNullOrEmpty($ModsPath)) {
+while ([string]::IsNullOrEmpty($ModsPath)) {
     $ModsPath = Read-Host "Enter the mods path (default: $defaultModsPath)"
     if ([string]::IsNullOrEmpty($ModsPath)) { $ModsPath = $defaultModsPath }
 }

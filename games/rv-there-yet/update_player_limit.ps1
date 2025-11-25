@@ -1,6 +1,16 @@
 # Define the path to the GameUserSettings.ini file
 $iniPath = "$env:LOCALAPPDATA\Ride\Saved\Config\Windows\GameUserSettings.ini"
 
+# Check if Ride game is currently running
+$processNames = @("Ride", "Ride.exe")
+$runningProcesses = Get-Process -Name $processNames -ErrorAction SilentlyContinue
+
+if ($runningProcesses) {
+    Write-Host "The game is currently running. Please close the game before continuing." -ForegroundColor Red
+    Write-Host "Process(es) found: $($runningProcesses.ProcessName -join ', ')" -ForegroundColor Yellow
+    exit
+}
+
 # Check if the file exists
 if (!(Test-Path $iniPath)) {
     Write-Host "GameUserSettings.ini file not found at $iniPath" -ForegroundColor Red
